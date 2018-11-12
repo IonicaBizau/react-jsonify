@@ -23,21 +23,22 @@ if( flexboxClass ){
 		flexboxClass = ' jsonFlex';
 }
 
-
+var noop = function(){};
 
 /**
- * The main component. It will refresh the props when the store changes.
- *
- * @prop  {Object|FreezerNode} value The JSON object, value of the form.
+ * The main component. *
+ * @prop  {Object|FreezerNode} value The JSON object, value of the form for using it as a controlled component.
+ * @prop  {Object|FreezerNode} defaultValue The JSON object, value of the form form using it as an uncontrolled component.
  * @prop  {Object} settings Customization settings
  */
 var Json = React.createClass({
 
 	getDefaultProps: function(){
 		return {
-			value: {},
-			errors: false,
-			updating: false
+			value: false,
+			defaultValue: {},
+			onChange: noop,
+			settings: {}
 		};
 	},
 
@@ -52,46 +53,60 @@ var Json = React.createClass({
 	},
 
 	getInitialState: function(){
-		var me = this,
-			value = this.props.value,
+		var state = this.getStateFromProps( this.props );
+		state.id = this.getId();
+		return state;
+	},
+
+	getStateFromProps: function( props ){
+		var value = props.value || ( this.state && this.state.value ) || props.defaultValue,
 			listener
 		;
 
-		// If it is a freezer node
+		// The value needs to be a freezer node
 		if( !value.getListener )
 			value = new Freezer( value ).get();
 
-		// Listen to changes
-		value.getListener().on('update', function( updated ){
-			if( me.state.updating )
-				return me.setState({ updating: false });
-
-			me.setState({value: updated});
-
-			if( me.state.errors )
-				me.getValidationErrors();
-
-			if( me.props.onChange )
-				me.props.onChange( updated.toJS() );
-		});
+		// Update the listener
+		value.getListener().off('update', this.updateListener );
+		value.getListener().on('update', this.updateListener );
 
 		return {
 			value: value,
-			defaults: this.createDefaults(),
-			id: this.getId()
+			defaults: this.createDefaults()
 		};
 	},
 
-	componentWillReceiveProps: function( newProps ){
-		if( !newProps.value.getListener ){
-			this.setState({updating: true, value: this.state.value.reset( newProps.value )});
-		}
+	updateListener: function( updated ){
+		var me = this;
 
-		this.setState( {defaults: this.createDefaults()} );
+		if( me.state.updating )
+			return me.setState({ updating: false });
+
+		// Only update on uncontrolled mode
+		if( !me.props.value )
+			me.setState({ value: updated });
+
+		if( me.state.errors )
+			me.getValidationErrors();
+
+		var value;
+		// If the input is a freezer node, return a freezer object
+		// otherwise, return JSON
+		if( this.props.value && this.props.value.getListener || this.props.defaultValue.getListener )
+			value = update;
+		else
+			value = updated.toJS();
+
+		me.props.onChange( value );
+	},
+
+	componentWillReceiveProps: function( newProps ){
+		this.setState( this.getStateFromProps( newProps ) );
 	},
 
 	render: function(){
-		var settings = this.props.settings || {},
+		var settings = this.props.settings,
 			ob = React.createElement( TypeField, {
 				type: 'object',
 				value: this.state.value,
