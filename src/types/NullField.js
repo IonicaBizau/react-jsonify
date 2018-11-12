@@ -1,6 +1,8 @@
 var React = require('react'),
-	FieldCreator = require('../FieldCreator')
+    FieldCreator = require('../FieldCreator'),
+    createClass = require("create-react-class")
 ;
+
 
 /**
  * Component for editing a string.
@@ -8,7 +10,7 @@ var React = require('react'),
  * @param  {Mixed} original The value of the component it the original json.
  * @param {FreezerNode} parent The parent node to let the string component update its value.
  */
-var NullField = React.createClass({
+var NullField = createClass({
 	getInitialState: function(){
 		return {
 			editing: !this.props.value,

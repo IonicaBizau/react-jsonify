@@ -10,7 +10,9 @@ var React = require('react'),
 	TextField = require('./src/types/TextField'),
 	PasswordField = require('./src/types/PasswordField'),
 	SelectField = require('./src/types/SelectField'),
-	deepSettings = require('./src/deepSettings')
+	deepSettings = require('./src/deepSettings'),
+        createClass = require("create-react-class"),
+        PropTypes = require("prop-types")
 ;
 
 // Detect flexbox support
@@ -31,7 +33,7 @@ var noop = function(){};
  * @prop  {Object|FreezerNode} defaultValue The JSON object, value of the form form using it as an uncontrolled component.
  * @prop  {Object} settings Customization settings
  */
-var Json = React.createClass({
+var Json = createClass({
 
 	getDefaultProps: function(){
 		return {
@@ -43,7 +45,7 @@ var Json = React.createClass({
 	},
 
 	childContextTypes: {
-		typeDefaults: React.PropTypes.object
+		typeDefaults: PropTypes.object
 	},
 
 	getChildContext: function(){

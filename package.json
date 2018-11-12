@@ -23,19 +23,12 @@
   },
   "homepage": "https://github.com/arqex/react-json",
   "dependencies": {
+    "create-react-class": "^15.6.3",
     "freezer-js": "^0.5.2",
-    "object-assign": "^2.0.0"
+    "object-assign": "^2.0.0",
+    "prop-types": "^15.6.2"
   },
   "peerDependencies": {
     "react": "^0.13.1"
-  },
-  "devDependencies": {
-    "gulp": "^3.8.11",
-    "gulp-insert": "^0.5.0",
-    "gulp-uglify": "^1.2.0",
-    "gulp-webpack": "^1.4.0",
-    "jsdom": "^3.1.2",
-    "mocha": "^2.2.4",
-    "node-libs-browser": "^0.5.2"
   }
 }
