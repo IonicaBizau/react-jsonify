@@ -1,3 +1,6 @@
+Forked from [`argex/react-json`](https://github.com/arqex/react-json).
+----
+
 # react-json
 A JSON editor packed as a React.js component, but also the simplest way of creating web forms.
 
@@ -46,7 +49,7 @@ var settings = {
 };
 
 React.render(
-  <Json value={ doc } settings={ settings }/>, 
+  <Json value={ doc } settings={ settings }/>,
   document.body
 );
 ```
