@@ -1,27 +1,23 @@
-module.exports = {
-	editing: function( parentValue, value ){
-		if( typeof value != 'undefined' )
-			return value;
+'use strict';
 
-		if( parentValue == 'always' )
-			return 'always';
+module.exports = {
+	editing: function editing(parentValue, value) {
+		if (typeof value != 'undefined') return value;
+
+		if (parentValue == 'always') return 'always';
 
 		// else return undefined: do not override
 	},
-	adder: function( parentValue, value ){
+	adder: function adder(parentValue, value) {
 
-		if( typeof value != 'undefined' )
-			return value;
-		if( typeof parentValue != 'undefined' )
-			return parentValue;
+		if (typeof value != 'undefined') return value;
+		if (typeof parentValue != 'undefined') return parentValue;
 
 		return true;
 	},
-	fixedFields: function( parentValue, value ){
-		if( typeof value != 'undefined' )
-			return value;
+	fixedFields: function fixedFields(parentValue, value) {
+		if (typeof value != 'undefined') return value;
 
-		if( typeof parentValue == 'boolean' )
-			return parentValue;
+		if (typeof parentValue == 'boolean') return parentValue;
 	}
 };

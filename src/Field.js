@@ -1,11 +1,10 @@
 'use strict';
 
 var React = require('react'),
-	objectAssign = require('object-assign'),
-	Validation = require('./validation'),
-	TypeField = require('./TypeField'),
-        createClass = require("create-react-class")
-;
+    objectAssign = require('object-assign'),
+    Validation = require('./validation'),
+    TypeField = require('./TypeField'),
+    createClass = require("create-react-class");
 
 /**
  * Field component that represent each Array element or Object field.
@@ -16,63 +15,53 @@ var React = require('react'),
  */
 var Field = createClass({
 
-	getInitialState: function(){
-		return {error: false};
+	getInitialState: function getInitialState() {
+		return { error: false };
 	},
-	getDefaultProps: function(){
+	getDefaultProps: function getDefaultProps() {
 		return {
 			definition: {}
 		};
 	},
-	render: function(){
+	render: function render() {
 		var definition = this.props.definition || {},
-			className = 'jsonField',
-			type = definition.type || TypeField.prototype.guessType( this.props.value ),
-			id = this.props.id + '_' + this.props.name,
-			error = '',
-			typeField
-		;
+		    className = 'jsonField',
+		    type = definition.type || TypeField.prototype.guessType(this.props.value),
+		    id = this.props.id + '_' + this.props.name,
+		    error = '',
+		    typeField;
 
-		if( type == 'react' )
-			return this.renderReactField( definition );
+		if (type == 'react') return this.renderReactField(definition);
 
-		typeField = this.renderTypeField( type, id );
+		typeField = this.renderTypeField(type, id);
 
 		className += ' ' + type + 'Field';
 
-		if( this.state.error ){
+		if (this.state.error) {
 			className += ' jsonError';
-			if( this.state.error !== true )
-				error = React.DOM.span({ key:'e', className: 'jsonErrorMsg' }, this.state.error );
+			if (this.state.error !== true) error = React.DOM.span({ key: 'e', className: 'jsonErrorMsg' }, this.state.error);
 		}
 
-		var jsonName = [ React.DOM.label({ key: 's1', htmlFor: id }, (definition.title || this.props.name) + ':' ) ];
+		var jsonName = [React.DOM.label({ key: 's1', htmlFor: id }, (definition.title || this.props.name) + ':')];
 
-		if( this.props.fixed ){
+		if (this.props.fixed) {
 			// If the field cannot be removed, add a placeholder to maintain the design
-			jsonName.unshift( React.DOM.span({ key:'f', className: 'jsonFixed' }) );
-		}
-		else{
-			jsonName.unshift( React.DOM.a({ key:'a', href: '#', className: 'jsonRemove', onClick: this.handleRemove}, 'x') );
+			jsonName.unshift(React.DOM.span({ key: 'f', className: 'jsonFixed' }));
+		} else {
+			jsonName.unshift(React.DOM.a({ key: 'a', href: '#', className: 'jsonRemove', onClick: this.handleRemove }, 'x'));
 		}
 
-		return React.DOM.div({className: className}, [
-			React.DOM.span( {className: 'jsonName', key: 'n'}, jsonName ),
-			React.DOM.span( {className: 'jsonValue', key: 'v'}, typeField ),
-			error
-		]);
+		return React.DOM.div({ className: className }, [React.DOM.span({ className: 'jsonName', key: 'n' }, jsonName), React.DOM.span({ className: 'jsonValue', key: 'v' }, typeField), error]);
 	},
 
-	renderTypeField: function( type, id ){
+	renderTypeField: function renderTypeField(type, id) {
 		var definition = this.props.definition,
-			settings = objectAssign( {}, definition.settings || {} ),
-			component
-		;
+		    settings = objectAssign({}, definition.settings || {}),
+		    component;
 
-		if( definition.fields )
-			settings.fields = definition.fields;
+		if (definition.fields) settings.fields = definition.fields;
 
-		component = React.createElement( TypeField, {
+		component = React.createElement(TypeField, {
 			type: type,
 			value: this.props.value,
 			settings: settings,
@@ -84,70 +73,58 @@ var Field = createClass({
 		return component;
 	},
 
-	renderReactField: function( definition ){
-		return React.DOM.div( { className: 'jsonField reactField' }, definition.output );
+	renderReactField: function renderReactField(definition) {
+		return React.DOM.div({ className: 'jsonField reactField' }, definition.output);
 	},
 
-	handleRemove: function( e ){
-		this.props.onDeleted( this.props.name );
+	handleRemove: function handleRemove(e) {
+		this.props.onDeleted(this.props.name);
 	},
 
-	shouldComponentUpdate: function( nextProps, nextState ){
+	shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
 		return nextProps.value != this.props.value || nextState.error != this.state.error;
 	},
 
-	onUpdated: function( value ){
+	onUpdated: function onUpdated(value) {
 		var definition = this.props.definition;
-		if( this.props.value !== value ){
-			this.props.onUpdated( this.props.name, value );
-			if( definition.onChange )
-				definition.onChange( value, this.props.value );
+		if (this.props.value !== value) {
+			this.props.onUpdated(this.props.name, value);
+			if (definition.onChange) definition.onChange(value, this.props.value);
 		}
 	},
 
-	getValidationErrors: function( jsonValue ){
+	getValidationErrors: function getValidationErrors(jsonValue) {
 		var childErrors = [],
-			validates = this.props.definition.validates,
-			name = this.props.name,
-			field = this.refs.typeField
-		;
+		    validates = this.props.definition.validates,
+		    name = this.props.name,
+		    field = this.refs.typeField;
 
-		if( !field )
-			return [];
+		if (!field) return [];
 
-		if( field.fieldType == 'object' ){
-			childErrors = field.getValidationErrors( jsonValue );
-			childErrors.forEach( function( error ){
-				if( !error.path )
-					error.path = name;
-				else
-					error.path = name + '.' + error.path;
+		if (field.fieldType == 'object') {
+			childErrors = field.getValidationErrors(jsonValue);
+			childErrors.forEach(function (error) {
+				if (!error.path) error.path = name;else error.path = name + '.' + error.path;
 			});
 
-			if( childErrors.length )
-				this.setState( {error: true} );
+			if (childErrors.length) this.setState({ error: true });
 		}
 
-		if( !validates )
-			return childErrors;
+		if (!validates) return childErrors;
 
+		var error = Validation.getValidationError(this.props.value, jsonValue, validates),
+		    message;
 
-		var error = Validation.getValidationError( this.props.value, jsonValue, validates ),
-			message
-		;
-
-		if( error ){
+		if (error) {
 			message = this.props.definition.errorMessage;
-			if( !message )
-				message = ( this.props.definition.label || this.props.name ) + ' value is not valid.';
+			if (!message) message = (this.props.definition.label || this.props.name) + ' value is not valid.';
 
 			error.path = name;
 			error.message = message;
-			this.setState( {error: message} );
-			childErrors = childErrors.concat( [error] );
-		}
-		else if( this.state.error ){
-			this.setState( {error: false} );
+			this.setState({ error: message });
+			childErrors = childErrors.concat([error]);
+		} else if (this.state.error) {
+			this.setState({ error: false });
 		}
 
 		return childErrors;

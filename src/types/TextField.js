@@ -1,7 +1,8 @@
+'use strict';
+
 var React = require('react'),
-	LeafMixin = require('../../mixins/LeafFieldMixin'),
-        createClass = require("create-react-class")
-;
+    LeafMixin = require('../../mixins/LeafFieldMixin'),
+    createClass = require("create-react-class");
 
 /**
  * Component for editing a long string.
@@ -13,15 +14,14 @@ var TextField = createClass({
 	mixins: [LeafMixin],
 	defaultValue: '',
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
+	getInitialState: function getInitialState() {
+		return this.getStateFromProps(this.props);
 	},
 
-	render: function(){
+	render: function render() {
 		var className = 'jsonText';
 
-		if( !this.state.editing )
-			return React.DOM.span( {onClick: this.setEditMode, className: className}, this.props.value );
+		if (!this.state.editing) return React.DOM.span({ onClick: this.setEditMode, className: className }, this.props.value);
 
 		return React.DOM.textarea({
 			value: this.state.value,
@@ -33,11 +33,11 @@ var TextField = createClass({
 		});
 	},
 
-	updateValue: function( e ){
+	updateValue: function updateValue(e) {
 		this.setState({ value: e.target.value });
 	},
 
-	isType: function( value ){
+	isType: function isType(value) {
 		return typeof value == 'string' && value.length > 100;
 	}
 });

@@ -1,13 +1,14 @@
+'use strict';
+
 var gulp = require('gulp'),
-	uglify = require('gulp-uglify'),
-	insert = require('gulp-insert'),
-	webpack = require('gulp-webpack')
-;
+    uglify = require('gulp-uglify'),
+    insert = require('gulp-insert'),
+    webpack = require('gulp-webpack');
 
 var packageName = 'react-json';
-var pack = require( './package.json' );
+var pack = require('./package.json');
 
-var getWPConfig = function( filename ){
+var getWPConfig = function getWPConfig(filename) {
 	return {
 		externals: {
 			react: {
@@ -22,43 +23,34 @@ var getWPConfig = function( filename ){
 	};
 };
 
-var cr = ('/*\n%%name%% v%%version%%\n%%homepage%%\n%%license%%: https://github.com/arqex/' + packageName + '/raw/master/LICENSE\n*/\n')
-	.replace( '%%name%%', pack.name)
-	.replace( '%%version%%', pack.version)
-	.replace( '%%license%%', pack.license)
-	.replace( '%%homepage%%', pack.homepage)
-;
+var cr = ('/*\n%%name%% v%%version%%\n%%homepage%%\n%%license%%: https://github.com/arqex/' + packageName + '/raw/master/LICENSE\n*/\n').replace('%%name%%', pack.name).replace('%%version%%', pack.version).replace('%%license%%', pack.license).replace('%%homepage%%', pack.homepage);
 
-function wp( config, minify ){
-	var stream =  gulp.src('./Json.js')
-		.pipe( webpack( config ) )
-	;
+function wp(config, minify) {
+	var stream = gulp.src('./Json.js').pipe(webpack(config));
 
-	if( minify ){
-		stream.pipe( uglify() );
+	if (minify) {
+		stream.pipe(uglify());
 	}
 
-	return stream.pipe( insert.prepend( cr ) )
-		.pipe( gulp.dest('build/') )
-	;
+	return stream.pipe(insert.prepend(cr)).pipe(gulp.dest('build/'));
 }
 
-gulp.task("build", function( callback ) {
-	var config = getWPConfig( 'Json' );
+gulp.task("build", function (callback) {
+	var config = getWPConfig('Json');
 	config.devtool = '#eval';
-	wp( config );
+	wp(config);
 
-	config = getWPConfig( 'Json.min' );
-	wp( config, true );
+	config = getWPConfig('Json.min');
+	wp(config, true);
 
-	config = getWPConfig( 'Json-no-freezer' );
+	config = getWPConfig('Json-no-freezer');
 	config.devtool = '#eval';
 	config.externals['freezer-js'] = { root: 'Freezer' };
-	wp( config );
+	wp(config);
 
-	config = getWPConfig( 'Json-no-freezer.min' );
+	config = getWPConfig('Json-no-freezer.min');
 	config.externals['freezer-js'] = { root: 'Freezer' };
-	return wp( config, true );
+	return wp(config, true);
 });
 
-gulp.task( 'default', ['build'] );
+gulp.task('default', ['build']);

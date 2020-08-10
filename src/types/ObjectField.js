@@ -1,11 +1,12 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var React = require('react'),
-	Field = require('../Field'),
-	assign = require('object-assign'),
-	CompoundFieldMixin = require('../../mixins/CompoundFieldMixin'),
-        createClass = require("create-react-class")
-;
+    Field = require('../Field'),
+    assign = require('object-assign'),
+    CompoundFieldMixin = require('../../mixins/CompoundFieldMixin'),
+    createClass = require("create-react-class");
 
 /**
  * Component for editing a hash.
@@ -15,11 +16,11 @@ var React = require('react'),
 var ObjectField = createClass({
 	mixins: [CompoundFieldMixin],
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
+	getInitialState: function getInitialState() {
+		return this.getStateFromProps(this.props);
 	},
 
-	getStateFromProps: function( props ){
+	getStateFromProps: function getStateFromProps(props) {
 		return {
 			editing: props.settings.editing || false,
 			fields: assign({}, props.settings && props.settings.fields || {})
@@ -28,52 +29,45 @@ var ObjectField = createClass({
 
 	defaultValue: {},
 
-	render: function(){
+	render: function render() {
 		var me = this,
-			settings = this.props.settings,
-			className = this.state.editing || settings.header === false ? 'open jsonObject jsonCompound' : 'jsonObject jsonCompound',
-			openHash = '',
-			definitions = this.state.fields,
-			attrs = [],
-			value = assign({}, this.props.value ),
-			fixedFields = this.getFixedFields(),
-			hidden = this.getHiddenFields(),
-			groupCount = 0,
-			definition
-		;
+		    settings = this.props.settings,
+		    className = this.state.editing || settings.header === false ? 'open jsonObject jsonCompound' : 'jsonObject jsonCompound',
+		    openHash = '',
+		    definitions = this.state.fields,
+		    attrs = [],
+		    value = assign({}, this.props.value),
+		    fixedFields = this.getFixedFields(),
+		    hidden = this.getHiddenFields(),
+		    groupCount = 0,
+		    definition;
 
-		this.getFieldOrder().forEach( function( field ){
+		this.getFieldOrder().forEach(function (field) {
 			// If the field is an array handle grouping
-			if( field.constructor === Array ) {
-				attrs.push( me.renderGroup( field, fixedFields, ++groupCount ) );
-			}
-			else if( !hidden[ field ] ) {
-				attrs.push( me.renderField( field, fixedFields ) );
+			if (field.constructor === Array) {
+				attrs.push(me.renderGroup(field, fixedFields, ++groupCount));
+			} else if (!hidden[field]) {
+				attrs.push(me.renderField(field, fixedFields));
 			}
 		});
 
-		var openHashChildren = [ attrs ];
-		if( settings.adder !== false ){
-			openHashChildren.push( this.renderAdder() );
+		var openHashChildren = [attrs];
+		if (settings.adder !== false) {
+			openHashChildren.push(this.renderAdder());
 		}
 
-		openHash = React.DOM.div({ key: 'o', className: 'jsonChildren'}, openHashChildren);
-		return React.DOM.span({className: className}, [
-			this.renderHeader(),
-			openHash
-		]);
+		openHash = React.DOM.div({ key: 'o', className: 'jsonChildren' }, openHashChildren);
+		return React.DOM.span({ className: className }, [this.renderHeader(), openHash]);
 	},
 
-	renderField: function( key, fixedFields ){
-		var value = this.props.value[ key ],
-			definition = this.state.fields[ key ] || {},
-			fixed = fixedFields === true || typeof fixedFields == 'object' && fixedFields[ key ]
-		;
+	renderField: function renderField(key, fixedFields) {
+		var value = this.props.value[key],
+		    definition = this.state.fields[key] || {},
+		    fixed = fixedFields === true || (typeof fixedFields === 'undefined' ? 'undefined' : _typeof(fixedFields)) == 'object' && fixedFields[key];
 
-		if( !definition.settings )
-			definition.settings = {};
+		if (!definition.settings) definition.settings = {};
 
-		return React.createElement( Field, {
+		return React.createElement(Field, {
 			value: value,
 			key: key,
 			name: key,
@@ -87,123 +81,111 @@ var ObjectField = createClass({
 		});
 	},
 
-	renderGroup: function( fieldNames, fixedFields, groupNumber ){
+	renderGroup: function renderGroup(fieldNames, fixedFields, groupNumber) {
 		var me = this,
-			fields = []
-		;
+		    fields = [];
 
-		fieldNames.forEach( function( field ){
-			fields.push( me.renderField( field, fixedFields ) );
+		fieldNames.forEach(function (field) {
+			fields.push(me.renderField(field, fixedFields));
 		});
 
-		return React.DOM.div({ className: 'jsonGroup jsonGroup_' + groupNumber }, fields );
+		return React.DOM.div({ className: 'jsonGroup jsonGroup_' + groupNumber }, fields);
 	},
 
-	getDefaultHeader: function(){
-		return 'Map [' + Object.keys( this.props.value ).length + ']';
+	getDefaultHeader: function getDefaultHeader() {
+		return 'Map [' + Object.keys(this.props.value).length + ']';
 	},
 
-	getDefaultAdder: function(){
+	getDefaultAdder: function getDefaultAdder() {
 		return '+ Add field';
 	},
 
-	updateField: function( key, value ){
-		this.checkEditingSetting( key );
-		this.props.value.set( key, value );
+	updateField: function updateField(key, value) {
+		this.checkEditingSetting(key);
+		this.props.value.set(key, value);
 	},
 
-	deleteField: function( key ){
-		this.props.value.remove( key );
+	deleteField: function deleteField(key) {
+		this.props.value.remove(key);
 	},
 
-	getValidationErrors: function( jsonValue ){
+	getValidationErrors: function getValidationErrors(jsonValue) {
 		var me = this,
-			errors = [],
-			attrs = Object.keys( this.refs )
-		;
+		    errors = [],
+		    attrs = Object.keys(this.refs);
 
-		attrs.forEach( function( attr ){
+		attrs.forEach(function (attr) {
 			var error = me.refs[attr].getValidationErrors();
-			if( error )
-				errors = errors.concat( error );
+			if (error) errors = errors.concat(error);
 		});
 
 		return errors;
 	},
 
-	getFieldOrder: function(){
+	getFieldOrder: function getFieldOrder() {
 		var me = this,
-			settingsOrder = this.props.settings.order,
-			orderType = typeof settingsOrder,
-			fields = this.props.settings.fields || {},
-			group
-		;
+		    settingsOrder = this.props.settings.order,
+		    orderType = typeof settingsOrder === 'undefined' ? 'undefined' : _typeof(settingsOrder),
+		    fields = this.props.settings.fields || {},
+		    group;
 
-		if( !settingsOrder || (orderType != 'function' && settingsOrder.constructor !== Array) )
-			return Object.keys( this.props.value );
+		if (!settingsOrder || orderType != 'function' && settingsOrder.constructor !== Array) return Object.keys(this.props.value);
 
-		var value = assign( {}, this.props.value ),
-			order = []
-		;
+		var value = assign({}, this.props.value),
+		    order = [];
 
-		if( orderType == 'function' )
-			return settingsOrder( value );
+		if (orderType == 'function') return settingsOrder(value);
 
 		// Add fields in the array
-		if( settingsOrder.constructor === Array ){
-			settingsOrder.forEach( function( field ){
+		if (settingsOrder.constructor === Array) {
+			settingsOrder.forEach(function (field) {
 
 				// An array, handle group
-				if( field.constructor == Array ){
+				if (field.constructor == Array) {
 					group = [];
-					field.forEach( function( groupField ){
-						if( me.addFieldToOrder( groupField, value, fields ) ){
-							group.push( groupField );
+					field.forEach(function (groupField) {
+						if (me.addFieldToOrder(groupField, value, fields)) {
+							group.push(groupField);
 
 							// Delete them from current values
-							delete value[ groupField ];
+							delete value[groupField];
 						}
 					});
-					if( group.length )
-						order.push( group );
-				}
-				else if( me.addFieldToOrder( field, value, fields ) ){
-					order.push( field );
+					if (group.length) order.push(group);
+				} else if (me.addFieldToOrder(field, value, fields)) {
+					order.push(field);
 
 					// Delete them from current values
-					delete value[ field ];
+					delete value[field];
 				}
 			});
 		}
 
 		// Add the keys left in the value
-		for( var key in value ){
-			if( order.indexOf( key ) == -1 )
-				order.push( key );
+		for (var key in value) {
+			if (order.indexOf(key) == -1) order.push(key);
 		}
 
 		return order;
 	},
 
 	/**
-	 * Checks when a field that appears in the sort settings needs to be added to
-	 * the fieldOrder array
-	 *
-	 * @param {String} field The field name
-	 */
-	addFieldToOrder: function( field, value, fields ){
-		return typeof value[ field ] != 'undefined' || fields[ field ] && fields[ field ].type == 'react';
+  * Checks when a field that appears in the sort settings needs to be added to
+  * the fieldOrder array
+  *
+  * @param {String} field The field name
+  */
+	addFieldToOrder: function addFieldToOrder(field, value, fields) {
+		return typeof value[field] != 'undefined' || fields[field] && fields[field].type == 'react';
 	},
 
-	getHiddenFields: function(){
+	getHiddenFields: function getHiddenFields() {
 		var hidden = this.props.settings.hiddenFields,
-			fields = {}
-		;
-		if( !hidden )
-			return fields;
+		    fields = {};
+		if (!hidden) return fields;
 
-		hidden.forEach( function( f ){
-			fields[ f ] = 1;
+		hidden.forEach(function (f) {
+			fields[f] = 1;
 		});
 
 		return fields;

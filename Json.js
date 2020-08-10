@@ -1,31 +1,30 @@
+'use strict';
+
 var React = require('react'),
-	Freezer = require('freezer-js'),
-	objectAssign = require('object-assign'),
-	TypeField = require('./src/TypeField'),
-	ObjectField = require('./src/types/ObjectField'),
-	ArrayField = require('./src/types/ArrayField'),
-	StringField = require('./src/types/StringField'),
-	BooleanField = require('./src/types/BooleanField'),
-	NumberField = require('./src/types/NumberField'),
-	TextField = require('./src/types/TextField'),
-	PasswordField = require('./src/types/PasswordField'),
-	SelectField = require('./src/types/SelectField'),
-	deepSettings = require('./src/deepSettings'),
-        createClass = require("create-react-class"),
-        PropTypes = require("prop-types")
-;
+    Freezer = require('freezer-js'),
+    objectAssign = require('object-assign'),
+    TypeField = require('./src/TypeField'),
+    ObjectField = require('./src/types/ObjectField'),
+    ArrayField = require('./src/types/ArrayField'),
+    StringField = require('./src/types/StringField'),
+    BooleanField = require('./src/types/BooleanField'),
+    NumberField = require('./src/types/NumberField'),
+    TextField = require('./src/types/TextField'),
+    PasswordField = require('./src/types/PasswordField'),
+    SelectField = require('./src/types/SelectField'),
+    deepSettings = require('./src/deepSettings'),
+    createClass = require("create-react-class"),
+    PropTypes = require("prop-types");
 
 // Detect flexbox support
 var flexboxClass = typeof document != 'undefined' || '',
-	css
-;
-if( flexboxClass ){
+    css;
+if (flexboxClass) {
 	css = document.documentElement.style;
-	if( ('flexWrap' in css) || ('webkitFlexWrap' in css) || ('msFlexWrap' in css) )
-		flexboxClass = ' jsonFlex';
+	if ('flexWrap' in css || 'webkitFlexWrap' in css || 'msFlexWrap' in css) flexboxClass = ' jsonFlex';
 }
 
-var noop = function(){};
+var noop = function noop() {};
 
 /**
  * The main component. *
@@ -35,7 +34,7 @@ var noop = function(){};
  */
 var Json = createClass({
 
-	getDefaultProps: function(){
+	getDefaultProps: function getDefaultProps() {
 		return {
 			value: false,
 			defaultValue: {},
@@ -48,30 +47,28 @@ var Json = createClass({
 		typeDefaults: PropTypes.object
 	},
 
-	getChildContext: function(){
+	getChildContext: function getChildContext() {
 		return {
 			typeDefaults: this.state.defaults
 		};
 	},
 
-	getInitialState: function(){
-		var state = this.getStateFromProps( this.props );
+	getInitialState: function getInitialState() {
+		var state = this.getStateFromProps(this.props);
 		state.id = this.getId();
 		return state;
 	},
 
-	getStateFromProps: function( props ){
-		var value = props.value || ( this.state && this.state.value ) || props.defaultValue,
-			listener
-		;
+	getStateFromProps: function getStateFromProps(props) {
+		var value = props.value || this.state && this.state.value || props.defaultValue,
+		    listener;
 
 		// The value needs to be a freezer node
-		if( !value.getListener )
-			value = new Freezer( value ).get();
+		if (!value.getListener) value = new Freezer(value).get();
 
 		// Update the listener
-		value.getListener().off('update', this.updateListener );
-		value.getListener().on('update', this.updateListener );
+		value.getListener().off('update', this.updateListener);
+		value.getListener().on('update', this.updateListener);
 
 		return {
 			value: value,
@@ -79,116 +76,105 @@ var Json = createClass({
 		};
 	},
 
-	updateListener: function( updated ){
+	updateListener: function updateListener(updated) {
 		var me = this;
 
-		if( me.state.updating )
-			return me.setState({ updating: false });
+		if (me.state.updating) return me.setState({ updating: false });
 
 		// Only update on uncontrolled mode
-		if( !me.props.value )
-			me.setState({ value: updated });
+		if (!me.props.value) me.setState({ value: updated });
 
-		if( me.state.errors )
-			me.getValidationErrors();
+		if (me.state.errors) me.getValidationErrors();
 
 		var value;
 		// If the input is a freezer node, return a freezer object
 		// otherwise, return JSON
-		if( this.props.value && this.props.value.getListener || this.props.defaultValue.getListener )
-			value = update;
-		else
-			value = updated.toJS();
+		if (this.props.value && this.props.value.getListener || this.props.defaultValue.getListener) value = update;else value = updated.toJS();
 
-		me.props.onChange( value );
+		me.props.onChange(value);
 	},
 
-	componentWillReceiveProps: function( newProps ){
-		this.setState( this.getStateFromProps( newProps ) );
+	componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+		this.setState(this.getStateFromProps(newProps));
 	},
 
-	render: function(){
+	render: function render() {
 		var settings = this.props.settings,
-			ob = React.createElement( TypeField, {
-				type: 'object',
-				value: this.state.value,
-				settings: objectAssign( {}, this.state.defaults.object, {
-					fields: settings.fields,
-					editing: this.getFormSetting( settings, 'editing', 'always'),
-					fixedFields: this.getFormSetting( settings, 'fixedFields', true),
-					adder:  this.getFormSetting( settings, 'adder', false),
-					hiddenFields: settings.hiddenFields,
-					header: false,
-					order: settings.order
-				}),
-				ref: 'value',
-				defaults: this.state.defaults,
-				id: this.state.id
+		    ob = React.createElement(TypeField, {
+			type: 'object',
+			value: this.state.value,
+			settings: objectAssign({}, this.state.defaults.object, {
+				fields: settings.fields,
+				editing: this.getFormSetting(settings, 'editing', 'always'),
+				fixedFields: this.getFormSetting(settings, 'fixedFields', true),
+				adder: this.getFormSetting(settings, 'adder', false),
+				hiddenFields: settings.hiddenFields,
+				header: false,
+				order: settings.order
 			}),
-			className = 'jsonEditor' + flexboxClass
-		;
+			ref: 'value',
+			defaults: this.state.defaults,
+			id: this.state.id
+		}),
+		    className = 'jsonEditor' + flexboxClass;
 
 		return React.DOM.div({ className: className }, ob);
 	},
 
-	getValue: function(){
+	getValue: function getValue() {
 		return this.state.value.toJS();
 	},
 
-	getValidationErrors: function(){
+	getValidationErrors: function getValidationErrors() {
 		var jsonValue = this.getValue(),
-			errors = this.refs.value.getValidationErrors( jsonValue )
-		;
+		    errors = this.refs.value.getValidationErrors(jsonValue);
 
-		this.setState( {errors: errors.length} );
+		this.setState({ errors: errors.length });
 		return errors.length ? errors : false;
 	},
-	getDeepSettings: function(){
+	getDeepSettings: function getDeepSettings() {
 		var settings = {};
 
-		for( var key in deepSettings ){
-			settings[ key ] = deepSettings[ key ]( this, settings[key] );
+		for (var key in deepSettings) {
+			settings[key] = deepSettings[key](this, settings[key]);
 		}
 
 		return settings;
 	},
-	createDefaults: function(){
+	createDefaults: function createDefaults() {
 		var settings = this.props.settings || {},
-			components = TypeField.prototype.components,
-			propDefaults = settings.defaults || {},
-			defaults = {}
-		;
+		    components = TypeField.prototype.components,
+		    propDefaults = settings.defaults || {},
+		    defaults = {};
 
-		for( var type in components ){
-			defaults[ type ] = objectAssign( {}, components[ type ].prototype.defaults || {}, propDefaults[ type ] || {});
+		for (var type in components) {
+			defaults[type] = objectAssign({}, components[type].prototype.defaults || {}, propDefaults[type] || {});
 		}
 
 		return defaults;
 	},
 
-	getId: function(){
-		return btoa( parseInt( Math.random() * 10000 ) ).replace(/=/g, '');
+	getId: function getId() {
+		return btoa(parseInt(Math.random() * 10000)).replace(/=/g, '');
 	},
 
-	getFormSetting: function( settings, field, def ){
-		if( typeof settings[ field ] != 'undefined' )
-			return settings[ field ];
-		if( settings.form )
-			return def;
+	getFormSetting: function getFormSetting(settings, field, def) {
+		if (typeof settings[field] != 'undefined') return settings[field];
+		if (settings.form) return def;
 	}
 });
 
 // Add global modifier functions
-Json.registerType = TypeField.registerType.bind( TypeField );
+Json.registerType = TypeField.registerType.bind(TypeField);
 
 // Register basic types
-Json.registerType( 'object', ObjectField );
-Json.registerType( 'array', ArrayField, true );
-Json.registerType( 'string', StringField, true );
-Json.registerType( 'text', TextField, true );
-Json.registerType( 'number', NumberField, true );
-Json.registerType( 'boolean', BooleanField, true );
-Json.registerType( 'password', PasswordField );
-Json.registerType( 'select', SelectField );
+Json.registerType('object', ObjectField);
+Json.registerType('array', ArrayField, true);
+Json.registerType('string', StringField, true);
+Json.registerType('text', TextField, true);
+Json.registerType('number', NumberField, true);
+Json.registerType('boolean', BooleanField, true);
+Json.registerType('password', PasswordField);
+Json.registerType('select', SelectField);
 
 module.exports = Json;

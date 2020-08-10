@@ -1,8 +1,8 @@
-var React = require('react'),
-	LeafMixin = require('../../mixins/LeafFieldMixin'),
-        createClass = require("create-react-class")
-;
+'use strict';
 
+var React = require('react'),
+    LeafMixin = require('../../mixins/LeafFieldMixin'),
+    createClass = require("create-react-class");
 
 /**
  * Component for editing a password.
@@ -16,19 +16,19 @@ var PasswordField = createClass({
 	inputType: 'password',
 	defaultValue: '',
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
+	getInitialState: function getInitialState() {
+		return this.getStateFromProps(this.props);
 	},
 
-	render: function(){
+	render: function render() {
 		return this.renderInput();
 	},
 
-	getDisplayModeString: function(){
+	getDisplayModeString: function getDisplayModeString() {
 		return this.getWildcards();
 	},
 
-	getWildcards: function(){
+	getWildcards: function getWildcards() {
 		var out = '';
 		for (var i = this.state.value.length - 1; i >= 0; i--) {
 			out += '*';
@@ -36,11 +36,11 @@ var PasswordField = createClass({
 		return out;
 	},
 
-	isType: function(){
+	isType: function isType() {
 		return false;
 	},
 
-	updateValue: function( e ){
+	updateValue: function updateValue(e) {
 		this.setState({ value: e.target.value });
 	}
 });

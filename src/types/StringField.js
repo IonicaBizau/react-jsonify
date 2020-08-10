@@ -1,8 +1,10 @@
-var React = require('react'),
-	LeafMixin = require('../../mixins/LeafFieldMixin'),
-        createClass = require("create-react-class")
-;
+'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var React = require('react'),
+    LeafMixin = require('../../mixins/LeafFieldMixin'),
+    createClass = require("create-react-class");
 
 /**
  * Component for editing a string.
@@ -16,20 +18,20 @@ var StringField = createClass({
 	inputType: 'text',
 	defaultValue: '',
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
+	getInitialState: function getInitialState() {
+		return this.getStateFromProps(this.props);
 	},
 
-	render: function(){
+	render: function render() {
 		return this.renderInput();
 	},
 
-	updateValue: function( e ){
+	updateValue: function updateValue(e) {
 		this.setState({ value: e.target.value });
 	},
 
-	isType: function( value ){
-		return typeof value != 'object';
+	isType: function isType(value) {
+		return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) != 'object';
 	}
 });
 

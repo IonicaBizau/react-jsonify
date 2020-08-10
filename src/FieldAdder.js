@@ -1,7 +1,8 @@
+'use strict';
+
 var React = require('react'),
-	TypeField = require('./TypeField'),
-        createClass = require("create-react-class")
-;
+    TypeField = require('./TypeField'),
+    createClass = require("create-react-class");
 
 /**
  * Component to add fields to an Object or Array.
@@ -10,7 +11,7 @@ var React = require('react'),
  *                           Otherwise an input will be shown to let the user define the key.
  */
 var FieldAdder = createClass({
-	getInitialState: function(){
+	getInitialState: function getInitialState() {
 		return {
 			creating: this.props.creating || false,
 			name: this.props.name,
@@ -18,77 +19,59 @@ var FieldAdder = createClass({
 		};
 	},
 
-	render: function(){
-		if( !this.state.creating )
-			return React.DOM.a({ className: 'jsonAdd', href: '#', onClick: this.handleCreate }, this.props.text );
+	render: function render() {
+		if (!this.state.creating) return React.DOM.a({ className: 'jsonAdd', href: '#', onClick: this.handleCreate }, this.props.text);
 
-		var options = this.getTypes().map( function( type ){
-				return React.DOM.option({value: type, key: type}, type[0].toUpperCase() + type.slice(1));
-			}),
-			fieldName
-		;
+		var options = this.getTypes().map(function (type) {
+			return React.DOM.option({ value: type, key: type }, type[0].toUpperCase() + type.slice(1));
+		}),
+		    fieldName;
 
-		if( typeof this.props.name != 'undefined' )
-			fieldName =  [
-				React.DOM.span({className: 'jsonName'}, this.props.name),
-				React.DOM.span(null, ':')
-			];
-		else {
-			fieldName = [
-				React.DOM.input({ref: 'keyInput', type: 'text', value: this.state.value, onChange: this.changeKey}),
-				React.DOM.span(null, ':')
-			];
+		if (typeof this.props.name != 'undefined') fieldName = [React.DOM.span({ className: 'jsonName' }, this.props.name), React.DOM.span(null, ':')];else {
+			fieldName = [React.DOM.input({ ref: 'keyInput', type: 'text', value: this.state.value, onChange: this.changeKey }), React.DOM.span(null, ':')];
 		}
 
-		return React.DOM.div( {className: 'jsonField jsonFieldAdder'}, [
-			fieldName,
-			React.DOM.select({ key: 's', value: this.state.type, onChange: this.changeType, ref: 'typeSelector'}, options),
-			React.DOM.button({ key: 'b', onClick: this.createField }, 'OK' ),
-			React.DOM.a({ key: 'a', href: '#', className: 'cancelField', onClick: this.handleCancel}, 'Cancel')
-		]);
+		return React.DOM.div({ className: 'jsonField jsonFieldAdder' }, [fieldName, React.DOM.select({ key: 's', value: this.state.type, onChange: this.changeType, ref: 'typeSelector' }, options), React.DOM.button({ key: 'b', onClick: this.createField }, 'OK'), React.DOM.a({ key: 'a', href: '#', className: 'cancelField', onClick: this.handleCancel }, 'Cancel')]);
 	},
 
-	componentDidUpdate: function( prevProps, prevState ){
-		if( !prevState.creating && this.state.creating ){
-			if( this.refs.keyInput )
-				this.refs.keyInput.focus();
-			else
-				this.refs.typeSelector.focus();
+	componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+		if (!prevState.creating && this.state.creating) {
+			if (this.refs.keyInput) this.refs.keyInput.focus();else this.refs.typeSelector.focus();
 		}
 	},
 
-	componentWillReceiveProps: function( newProps ){
-		this.setState({name: newProps.name});
+	componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+		this.setState({ name: newProps.name });
 	},
 
-	handleCreate: function( e ){
+	handleCreate: function handleCreate(e) {
 		e.preventDefault();
-		this.setState({creating: true});
+		this.setState({ creating: true });
 	},
 
-	handleCancel: function( e ){
+	handleCancel: function handleCancel(e) {
 		e.preventDefault();
-		this.setState({creating: false});
+		this.setState({ creating: false });
 	},
 
-	changeType: function( e ){
-		this.setState({type: e.target.value});
+	changeType: function changeType(e) {
+		this.setState({ type: e.target.value });
 	},
 
-	changeKey: function( e ){
-		this.setState({name: e.target.value});
+	changeKey: function changeKey(e) {
+		this.setState({ name: e.target.value });
 	},
 
-	createField: function(){
-		this.setState({creating: false});
+	createField: function createField() {
+		this.setState({ creating: false });
 
-		var value = TypeField.prototype.components[ this.state.type ].prototype.defaultValue;
+		var value = TypeField.prototype.components[this.state.type].prototype.defaultValue;
 
-		this.props.onCreate( this.state.name, value, {type: this.state.type });
+		this.props.onCreate(this.state.name, value, { type: this.state.type });
 	},
 
-	getTypes: function(){
-		return Object.keys( TypeField.prototype.components );
+	getTypes: function getTypes() {
+		return Object.keys(TypeField.prototype.components);
 	}
 });
 

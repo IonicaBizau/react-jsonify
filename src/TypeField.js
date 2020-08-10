@@ -1,10 +1,10 @@
 'use strict';
 
 var React = require('react'),
-	deepSettings = require('./deepSettings'),
-	objectAssign = require('object-assign'),
-        PropTypes = require("prop-types"),
-        createClass = require("create-react-class");
+    deepSettings = require('./deepSettings'),
+    objectAssign = require('object-assign'),
+    PropTypes = require("prop-types"),
+    createClass = require("create-react-class");
 
 var components = {};
 var typeCheckOrder = [];
@@ -14,21 +14,16 @@ var TypeField = createClass({
 	typeCheckOrder: [],
 
 	contextTypes: {
-	    typeDefaults: PropTypes.object
+		typeDefaults: PropTypes.object
 	},
 
-	render: function() {
+	render: function render() {
 		var Component = this.getComponent(),
-			settings = objectAssign(
-				{},
-				this.context.typeDefaults[ this.props.type ],
-				this.props.settings
-			)
-		;
+		    settings = objectAssign({}, this.context.typeDefaults[this.props.type], this.props.settings);
 
-		this.addDeepSettings( settings );
+		this.addDeepSettings(settings);
 
-		return React.createElement( Component, {
+		return React.createElement(Component, {
 			value: this.props.value,
 			settings: settings,
 			onUpdated: this.props.onUpdated,
@@ -37,56 +32,48 @@ var TypeField = createClass({
 		});
 	},
 
-	getComponent: function(){
+	getComponent: function getComponent() {
 		var type = this.props.type;
-		if( !type )
-			type = this.guessType( this.props.value );
+		if (!type) type = this.guessType(this.props.value);
 
 		this.fieldType = type;
 
-		return this.components[ type ];
+		return this.components[type];
 	},
 
-	guessType: function( value ){
+	guessType: function guessType(value) {
 		var type = false,
-			i = 0,
-			types = this.typeCheckOrder,
-			component
-		;
+		    i = 0,
+		    types = this.typeCheckOrder,
+		    component;
 
-		while( !type && i < types.length ){
-			component = this.components[ types[i] ].prototype;
-			if( component.isType && component.isType( value ) )
-				type = types[i++];
-			else
-				i++;
+		while (!type && i < types.length) {
+			component = this.components[types[i]].prototype;
+			if (component.isType && component.isType(value)) type = types[i++];else i++;
 		}
 
 		return type || 'object';
 	},
 
-	getValidationErrors: function( jsonValue ){
-		return this.refs.field.getValidationErrors( jsonValue );
+	getValidationErrors: function getValidationErrors(jsonValue) {
+		return this.refs.field.getValidationErrors(jsonValue);
 	},
 
-	addDeepSettings: function( settings ){
+	addDeepSettings: function addDeepSettings(settings) {
 		var parentSettings = this.props.parentSettings || {},
-			deep
-		;
+		    deep;
 
-		for( var key in deepSettings ){
-			deep = deepSettings[ key ]( parentSettings[key], settings[key] );
-			if( typeof deep != 'undefined' )
-				settings[ key ] = deep;
+		for (var key in deepSettings) {
+			deep = deepSettings[key](parentSettings[key], settings[key]);
+			if (typeof deep != 'undefined') settings[key] = deep;
 		}
- 	}
+	}
 });
 
-TypeField.registerType = function( name, Component, selectable ){
+TypeField.registerType = function (name, Component, selectable) {
 	var proto = TypeField.prototype;
-	proto.components[ name ] = Component;
-	if( selectable )
-		proto.typeCheckOrder.unshift( name );
+	proto.components[name] = Component;
+	if (selectable) proto.typeCheckOrder.unshift(name);
 };
 
 module.exports = TypeField;

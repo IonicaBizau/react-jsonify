@@ -1,11 +1,12 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var React = require('react'),
-	Field = require('../Field'),
-	assign = require('object-assign'),
-	CompoundFieldMixin = require('../../mixins/CompoundFieldMixin'),
-        createClass = require("create-react-class")
-;
+    Field = require('../Field'),
+    assign = require('object-assign'),
+    CompoundFieldMixin = require('../../mixins/CompoundFieldMixin'),
+    createClass = require("create-react-class");
 
 /**
  * Component for editing an array.
@@ -15,11 +16,11 @@ var React = require('react'),
 var ArrayField = createClass({
 	mixins: [CompoundFieldMixin],
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
+	getInitialState: function getInitialState() {
+		return this.getStateFromProps(this.props);
 	},
 
-	getStateFromProps: function( props ){
+	getStateFromProps: function getStateFromProps(props) {
 		return {
 			editing: props.settings.editing || false,
 			fields: this.state && this.state.fields || {}
@@ -28,25 +29,23 @@ var ArrayField = createClass({
 
 	defaultValue: [],
 
-	render: function(){
+	render: function render() {
 		var settings = this.props.settings,
-			className = this.state.editing ? 'open jsonArray jsonCompound' : 'jsonArray jsonCompound',
-			openArray = '',
-			fixedFields = this.getFixedFields(),
-			definitions = this.state.fields
-		;
+		    className = this.state.editing ? 'open jsonArray jsonCompound' : 'jsonArray jsonCompound',
+		    openArray = '',
+		    fixedFields = this.getFixedFields(),
+		    definitions = this.state.fields;
 
 		var attrs = [],
-			definition, fixed
-		;
+		    definition,
+		    fixed;
 		for (var i = 0; i < this.props.value.length; i++) {
-			definition = definitions[ i ] || {};
-			if( !definition.settings )
-				definition.settings = {};
+			definition = definitions[i] || {};
+			if (!definition.settings) definition.settings = {};
 
-			fixed = fixedFields === true || typeof fixedFields == 'object' && fixedFields[ i ];
+			fixed = fixedFields === true || (typeof fixedFields === 'undefined' ? 'undefined' : _typeof(fixedFields)) == 'object' && fixedFields[i];
 
-			attrs.push( React.createElement( Field, {
+			attrs.push(React.createElement(Field, {
 				value: this.props.value[i],
 				key: i,
 				name: i,
@@ -59,50 +58,46 @@ var ArrayField = createClass({
 			}));
 		}
 
-		var openArrayChildren = [ attrs ];
-		if( settings.adder !== false ){
-			openArrayChildren.push( this.renderAdder( this.props.value.length ) );
+		var openArrayChildren = [attrs];
+		if (settings.adder !== false) {
+			openArrayChildren.push(this.renderAdder(this.props.value.length));
 		}
 
-		openArray = React.DOM.div({ key:'o', className: 'jsonChildren' }, openArrayChildren );
+		openArray = React.DOM.div({ key: 'o', className: 'jsonChildren' }, openArrayChildren);
 
-		return React.DOM.span({className: className}, [
-			this.renderHeader(),
-			openArray
-		]);
+		return React.DOM.span({ className: className }, [this.renderHeader(), openArray]);
 	},
 
-	getDefaultHeader: function(){
+	getDefaultHeader: function getDefaultHeader() {
 		return 'List [' + this.props.value.length + ']';
 	},
 
-	getDefaultAdder: function(){
+	getDefaultAdder: function getDefaultAdder() {
 		return '+ Add element';
 	},
 
-	updateField: function( key, value ){
-		this.checkEditingSetting( key );
-		this.props.value.set( key, value );
+	updateField: function updateField(key, value) {
+		this.checkEditingSetting(key);
+		this.props.value.set(key, value);
 	},
 
-	deleteField: function( key ){
+	deleteField: function deleteField(key) {
 		var fields = {};
 
-		for( var index in this.state.fields ){
-			if( index > key ){
-				fields[ index - 1 ] = this.state.fields[ index ];
-			}
-			else if( index < key ){
-				fields[ index ] = this.state.fields[ index ];
+		for (var index in this.state.fields) {
+			if (index > key) {
+				fields[index - 1] = this.state.fields[index];
+			} else if (index < key) {
+				fields[index] = this.state.fields[index];
 			}
 			// If they are equal we are deleting the element, do nothing
 		}
 
-		this.props.value.splice( key, 1 );
-		this.setState( { fields: fields } );
+		this.props.value.splice(key, 1);
+		this.setState({ fields: fields });
 	},
 
-	isType: function( value ){
+	isType: function isType(value) {
 		return value && value.constructor == Array;
 	}
 });

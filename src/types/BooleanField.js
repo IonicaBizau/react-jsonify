@@ -1,3 +1,5 @@
+'use strict';
+
 var React = require('react'),
     createClass = require("create-react-class");
 
@@ -9,7 +11,7 @@ var BooleanField = createClass({
 
 	defaultValue: false,
 
-	render: function(){
+	render: function render() {
 		var className = 'jsonBoolean';
 
 		return React.DOM.input({
@@ -21,17 +23,16 @@ var BooleanField = createClass({
 		});
 	},
 
-	updateValue: function( e ){
-		this.props.onUpdated( e.target.checked );
+	updateValue: function updateValue(e) {
+		this.props.onUpdated(e.target.checked);
 	},
 
-	isType: function( value ){
+	isType: function isType(value) {
 		return typeof value == 'boolean';
 	},
 
-	componentWillReceiveProps: function( nextProps ){
-		if( this.props.value != nextProps.value )
-			this.setState( { value: nextProps.value } );
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		if (this.props.value != nextProps.value) this.setState({ value: nextProps.value });
 	}
 });
 

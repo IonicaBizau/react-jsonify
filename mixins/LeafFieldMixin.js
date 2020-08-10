@@ -3,18 +3,17 @@
 var React = require('react');
 
 module.exports = {
-	getStateFromProps: function( props ){
+	getStateFromProps: function getStateFromProps(props) {
 		return {
 			editing: props.settings.editing || false,
 			value: props.value
 		};
 	},
 
-	renderInput: function(){
+	renderInput: function renderInput() {
 		var className = this.typeClass;
 
-		if( !this.state.editing )
-			return React.DOM.span( {onClick: this.setEditMode, className: className}, this.getDisplayString() );
+		if (!this.state.editing) return React.DOM.span({ onClick: this.setEditMode, className: className }, this.getDisplayString());
 
 		return React.DOM.input({
 			type: this.inputType,
@@ -28,61 +27,57 @@ module.exports = {
 		});
 	},
 
-	getDisplayString: function(){
-		if( this.getDisplayModeString )
-			return this.getDisplayModeString();
+	getDisplayString: function getDisplayString() {
+		if (this.getDisplayModeString) return this.getDisplayModeString();
 
-		if( this.props.value === '' )
-			return React.DOM.span( {className: 'jsonNovalue'}, 'No value' );
+		if (this.props.value === '') return React.DOM.span({ className: 'jsonNovalue' }, 'No value');
 
 		return this.props.value;
 	},
 
-	componentWillReceiveProps: function( nextProps ){
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 		var nextState = {};
 
 		nextState.value = nextProps.value;
 
-		if( this.props.settings.editing != nextProps.settings.editing ){
+		if (this.props.settings.editing != nextProps.settings.editing) {
 			nextState.editing = nextProps.editing;
 		}
 
-		this.setState( nextState );
+		this.setState(nextState);
 	},
 
-	componentDidUpdate: function( prevProps, prevState ){
-		if( this.state.editing && (!prevState.editing || this.props.settings.focus) ){
+	componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+		if (this.state.editing && (!prevState.editing || this.props.settings.focus)) {
 			this.focus();
 		}
 	},
 
-	componentDidMount: function(){
-		if( this.state.editing === true || this.props.settings.focus )
-			this.focus();
+	componentDidMount: function componentDidMount() {
+		if (this.state.editing === true || this.props.settings.focus) this.focus();
 	},
 
-	setEditMode: function(){
-		this.setState({editing: true});
+	setEditMode: function setEditMode() {
+		this.setState({ editing: true });
 	},
 
-	setValue: function(){
-		if( this.state.editing != 'always' )
-			this.setState({editing: false, value: this.props.value});
-		this.props.onUpdated( this.state.value );
+	setValue: function setValue() {
+		if (this.state.editing != 'always') this.setState({ editing: false, value: this.props.value });
+		this.props.onUpdated(this.state.value);
 	},
 
-	toggleEditing: function(){
+	toggleEditing: function toggleEditing() {
 		this.setState({ editing: !this.state.editing });
 	},
 
-	handleKeyDown: function( e ){
-		if( e.which == 13 )
-			this.setValue();
+	handleKeyDown: function handleKeyDown(e) {
+		if (e.which == 13) this.setValue();
 	},
 
-	focus: function(){
+	focus: function focus() {
 		var node = this.refs.input;
-		if (node) { // avoid firing when there is no input
+		if (node) {
+			// avoid firing when there is no input
 			node.focus();
 			node.value = node.value;
 		}

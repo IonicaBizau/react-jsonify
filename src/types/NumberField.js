@@ -1,7 +1,8 @@
+'use strict';
+
 var React = require('react'),
     LeafMixin = require('../../mixins/LeafFieldMixin'),
-    createClass = require("create-react-class")
-;
+    createClass = require("create-react-class");
 
 /**
  * Component for editing a number.
@@ -15,19 +16,19 @@ var NumberField = createClass({
 	inputType: 'number',
 	defaultValue: '',
 
-	getInitialState: function(){
-		return this.getStateFromProps( this.props );
+	getInitialState: function getInitialState() {
+		return this.getStateFromProps(this.props);
 	},
 
-	render: function(){
+	render: function render() {
 		return this.renderInput();
 	},
 
-	updateValue: function( e ){
-		this.setState({ value: parseFloat( e.target.value ) });
+	updateValue: function updateValue(e) {
+		this.setState({ value: parseFloat(e.target.value) });
 	},
 
-	isType: function( value ){
+	isType: function isType(value) {
 		return typeof value == 'number';
 	}
 });

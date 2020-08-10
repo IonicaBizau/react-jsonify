@@ -16,7 +16,7 @@
     "forms",
     "json"
   ],
-  "author": "Javier Marquez",
+  "author": "Ionică Bizău <bizauionica@gmail.com> (https://ionicabizau.net)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/IonicaBizau/react-jsonify/issues"
@@ -141,5 +141,20 @@
       },
       "React JSON is highly configurable, have a look at the docs to discover how."
     ]
-  }
+  },
+  "files": [
+    "bin/",
+    "app/",
+    "lib/",
+    "dist/",
+    "src/",
+    "scripts/",
+    "resources/",
+    "menu/",
+    "cli.js",
+    "index.js",
+    "bloggify.js",
+    "bloggify.json",
+    "bloggify/"
+  ]
 }
