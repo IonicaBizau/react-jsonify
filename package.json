@@ -1,6 +1,6 @@
 {
   "name": "react-jsonify",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "A JSON editor packed as a React.js component and the simplest way of creating web forms.",
   "main": "Json.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/arqex/react-json.git"
+    "url": "https://github.com/IonicaBizau/react-json.git"
   },
   "keywords": [
     "react",
@@ -19,9 +19,9 @@
   "author": "Javier Marquez",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/arqex/react-json/issues"
+    "url": "https://github.com/IonicaBizau/react-json/issues"
   },
-  "homepage": "https://github.com/arqex/react-json",
+  "homepage": "https://github.com/IonicaBizau/react-json",
   "dependencies": {
     "create-react-class": "^15.6.3",
     "freezer-js": "^0.5.2",
@@ -30,5 +30,116 @@
   },
   "peerDependencies": {
     "react": "^0.13.1"
+  },
+  "blah": {
+    "thanks": "The original project was [`argex/react-json`](https://github.com/arqex/react-json). I forked it and made a couple of changes",
+    "description": [
+      "[Play safe with react-json forms in the playground](http://codepen.io/arqex/pen/rVWYgo?editors=001).",
+      "React-json is like having an special input type for JSON objects, developers only need to listen to changes in the JSON instead of writing all the boilerplate needed to handle every single input of the form. It comes with top features:",
+      {
+        "ul": [
+          "Field type guessing for quick forms",
+          "Validation",
+          "Styles easily customizable",
+          "Extensible with custom field types"
+        ]
+      }
+    ],
+    "example": [
+      {
+        "code": {
+          "language": "jsx",
+          "content": [
+            "var doc = {",
+            "  hola: \"amigo\"",
+            "  array: [1,2,3]",
+            "};",
+            "",
+            "React.render(",
+            "  <Json value={ doc } onChange={ logChange } />,",
+            "  document.body",
+            ");",
+            "",
+            "function logChange( value ){",
+            "   console.log( value );",
+            "}"
+          ]
+        }
+      },
+      "[See this example working](http://codepen.io/arqex/pen/rVWYgo?editors=001)",
+      {
+        "h2": "A simple form creator"
+      },
+      "Do you hate creating forms? React-json handles all the dirty markup for you, and makes you focus in what is important;",
+      {
+        "code": {
+          "language": "jsx",
+          "content": [
+            "var doc = {",
+            "  user: \"\",",
+            "  password: \"\"",
+            "};",
+            "",
+            "// form: true",
+            "// make objects not extensible,",
+            "// fields not removable",
+            "// and inputs always visible",
+            "var settings = {",
+            "  form: true,",
+            "  fields: { password: {type: 'password'} }",
+            "};",
+            "",
+            "React.render(",
+            "  <Json value={ doc } settings={ settings }/>,",
+            "  document.body",
+            ");"
+          ]
+        }
+      },
+      "[See this form working](http://codepen.io/arqex/pen/xGRpOx?editors=011)",
+      {
+        "h2": "Props"
+      },
+      {
+        "table": {
+          "headers": [
+            "Name",
+            "Type",
+            "Default",
+            "Description"
+          ],
+          "rows": [
+            [
+              "**value**",
+              "Object",
+              "none",
+              "Represents the JSON object to edit, in order to use react-json as a [controlled component](https://facebook.github.io/react/docs/forms.html#controlled-components)."
+            ],
+            [
+              "**defaultValue**",
+              "Object",
+              "`{}`",
+              "Represents the JSON object to edit, in order to use react-json as a [uncontrolled component](https://facebook.github.io/react/docs/forms.html#uncontrolled-components)."
+            ],
+            [
+              "**onChange**",
+              "function",
+              "`fn(){}`",
+              "Callback trigger when the JSON object is updated."
+            ],
+            [
+              "**settings**",
+              "Object",
+              "`{}`",
+              "Fine grained customization for the component. [See the settings documentation](docs/settings.md)."
+            ]
+          ]
+        }
+      },
+      {
+        "h2": "Docs"
+      },
+      "React JSON is highly configurable, have a look at the docs to discover how."
+    ]
   }
 }
