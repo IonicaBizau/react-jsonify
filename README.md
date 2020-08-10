@@ -34,8 +34,8 @@
 
 
 
-[Play safe with react-json forms in the playground](http://codepen.io/arqex/pen/rVWYgo?editors=001).
-React-json is like having an special input type for JSON objects, developers only need to listen to changes in the JSON instead of writing all the boilerplate needed to handle every single input of the form. It comes with top features:
+[Play safe with react-jsonify forms in the playground](http://codepen.io/arqex/pen/rVWYgo?editors=001).
+React-jsonify is like having an special input type for JSON objects, developers only need to listen to changes in the JSON instead of writing all the boilerplate needed to handle every single input of the form. It comes with top features:
 
  - Field type guessing for quick forms
  - Validation
@@ -99,7 +99,7 @@ function logChange( value ){
 [See this example working](http://codepen.io/arqex/pen/rVWYgo?editors=001)
 ## A simple form creator
 
-Do you hate creating forms? React-json handles all the dirty markup for you, and makes you focus in what is important;
+Do you hate creating forms? React-jsonify handles all the dirty markup for you, and makes you focus in what is important;
 ```jsx
 var doc = {
   user: "",
@@ -126,8 +126,8 @@ React.render(
 
  | Name | Type | Default | Description |
  | --- | --- | --- | --- |
- | **value** | Object | none | Represents the JSON object to edit, in order to use react-json as a [controlled component](https://facebook.github.io/react/docs/forms.html#controlled-components).
-**defaultValue** | Object | `{}` | Represents the JSON object to edit, in order to use react-json as a [uncontrolled component](https://facebook.github.io/react/docs/forms.html#uncontrolled-components).
+ | **value** | Object | none | Represents the JSON object to edit, in order to use react-jsonify as a [controlled component](https://facebook.github.io/react/docs/forms.html#controlled-components).
+**defaultValue** | Object | `{}` | Represents the JSON object to edit, in order to use react-jsonify as a [uncontrolled component](https://facebook.github.io/react/docs/forms.html#uncontrolled-components).
 **onChange** | function | `fn(){}` | Callback trigger when the JSON object is updated.
 **settings** | Object | `{}` | Fine grained customization for the component. [See the settings documentation](docs/settings.md). |
 
